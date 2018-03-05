@@ -33,7 +33,7 @@ class StreamListener(tweepy.StreamListener):
 			data.close()
 		except IOError:
 			data = open(str(sys.argv[1]) + '-data.txt', 'w+')
-			data.write("id\ttext\ttimestamp\tlocation")
+			data.write("id\ttext\ttimestamp\tlocation\n")
 			id = 0
 			data.close()
 		
