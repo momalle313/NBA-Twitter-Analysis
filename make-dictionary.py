@@ -29,7 +29,7 @@ if __name__ == "__main__":
 		# This allows the sentiment analysis library to run without error.
 		# I copied it to a new file before cleaning data to preserve the original integrity of the data
 
-	total=2 # total tweets to classify for that team
+	total=200 # total tweets to classify for that team
 	lines=len(data.values)
 	teamname=sys.argv[1]
 	if teamname=='Heat':
