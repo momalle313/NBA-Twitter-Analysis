@@ -44,7 +44,7 @@ if __name__ == "__main__":
 	print "1=pos, 2=neg, 3=neu"
 	for index in range(total):
 		#print index
-		#print index*mymod
+		print index*mymod
 		newline=data.values[index*mymod][1].replace(',','') # take every n-th tweet; it also removes commas because it will be output as csv
 		#newline=newline.decode('utf-8')
 		tweetcount+=1
