@@ -33,11 +33,11 @@ if __name__ == "__main__":
 	lines=len(data.values)
 	teamname=sys.argv[1]
 	if teamname=='Heat':
-		mymod=math.floor(lines/total) #~1474
+		mymod=int(math.floor(lines/total)) #~1474
 	elif teamname=='Bulls':
-		mymod=math.floor(lines/total) #~148
+		mymod=int(math.floor(lines/total)) #~148
 	elif teamname=='Rockets':
-		mymod=math.floor(lines/total) #~2126
+		mymod=int(math.floor(lines/total)) #~2126
 	#index=0
 	tweetcount=0
 	file1=open('train-' + str(sys.argv[1]) + '.csv',"a")
