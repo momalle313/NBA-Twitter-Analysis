@@ -50,7 +50,7 @@ if __name__ == "__main__":
 		tweetcount+=1
 		print "Tweet " + str(tweetcount) + ": " + newline
 		tweet_sent = input("1=pos, 2=neg, 3=neu? ")
-		while tweet_sent!=1 and tweet_sent!=2 and tweet_sent!=3:
+		while tweet_sent!=1 and tweet_sent!=2 and tweet_sent!=3 and tweet_sent!=9:
 			print "Invalid input"
 			print "Tweet " + str(tweetcount) + ": " + newline
 			tweet_sent = input("1=pos, 2=neg, 3=neu? ")
@@ -66,6 +66,8 @@ if __name__ == "__main__":
 			file1.write(newline)
 			file1.write(", ")
 			file1.write("neu\n")
+		elif tweet_sent==9:
+			pass # in case acidentally error out while classifying tweets, can use 9 to skip ahead until where you were; file automatically appends without overwriting
 
 	file1.close()
 	print "Made file train-" + teamname + ".csv"
