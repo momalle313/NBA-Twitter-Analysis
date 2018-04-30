@@ -5,6 +5,7 @@ from textblob import TextBlob
 import re
 import string
 from textblob.classifiers import NaiveBayesClassifier
+import datetime
 
 ### Michael O'Malley, Jacob Dumford, Gregory Nemecek
 ### Social Sensing and Cyber Physical Systems
@@ -28,19 +29,46 @@ if __name__ == "__main__":
 		# This allows the sentiment analysis library to run without error.
 		# I copied it to a new file before cleaning data to preserve the original integrity of the data
 
+	if len(sys.argv) <= 2:
+		print "Please state which game to analyze."
+		sys.exit()
+
 	print "Running..."
 
 	text=[]
-	starttime='2018-03-21 12:00:00'
-	endtime='2018-03-21 23:30:00'
+	# starttime='2018-03-21 12:00:00'
+	# endtime='2018-03-21 23:30:00'
+
+	# Heat_starttimes = []
+	# Bulls_starttimes = []
+	# Rockets_starttimes = []
+
+	Heat_endtimes = ['2018-03-21 23:30','2018-03-24 00:00','2018-04-03 23:30','2018-04-04 23:30','2018-04-09 23:30','2018-04-12 00:00']
+	Bulls_endtimes = ['2018-03-22 00:00','2018-03-24 00:00','2018-03-24 23:00','2018-03-28 00:00','2018-04-04 00:00','2018-04-08 00:00','2018-04-09 23:30','2018-04-12 00:00']
+	Rockets_endtimes = ['2018-03-21 02:30','2018-03-23 00:00','2018-03-25 00:00','2018-03-28 00:00','2018-04-04 00:00','2018-04-06 00:00','2018-04-08 00:30','2018-04-11 02:30','2018-04-12 02:30']
+
+	# Heat_extratimes = []
+	# Bulls_extratimes = []
+	# Rockets_extratimes = []
+	
 	# Set time range for the day to gather sentiment for
 	# Note: 4 hour time conversion from tweet time (UTC-4)
+
+	if (sys.argv[1] == 'Heat'):
+		endtime = Heat_endtimes[int(sys.argv[2])]
+	elif (sys.argv[1] == 'Bulls'):
+		endtime = Bulls_endtimes[int(sys.argv[2])]
+	elif (sys.argv[1] == 'Rockets'):
+		endtime = Rockets_endtimes[int(sys.argv[2])]
+
 	for line in data.values:
 		dt = pd.to_datetime(line[2], format='%Y-%m-%d %H:%M:%S')
-		if dt > pd.to_datetime(starttime, format='%Y-%m-%d %H:%M:%S') and dt < pd.to_datetime(endtime, format='%Y-%m-%d %H:%M:%S'):
+		if dt > (pd.to_datetime(endtime, format='%Y-%m-%d %H:%M') - pd.to_timedelta('0 days 06:00:00')) and dt < pd.to_datetime(endtime, format='%Y-%m-%d %H:%M'):
 			text.append(line[1])
-		elif dt > pd.to_datetime(endtime, format='%Y-%m-%d %H:%M:%S'):
+		elif dt > pd.to_datetime(endtime, format='%Y-%m-%d %H:%M'):
 			break
+
+	print "Classifying tweets..."
 
 	sentiment=0.
 	n=0.
