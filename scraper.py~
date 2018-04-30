@@ -43,8 +43,6 @@ class StreamListener(tweepy.StreamListener):
 
 	# When a status is found, record the necessary information
 	def on_status(self, status):
-		print("datetime.now: " + str(datetime.datetime.now()))
-		print("status.created_at: " + str(status.created_at))
                 if datetime.datetime.now() > datetime.datetime(2018, 4, 22, 4):
                         quit()
                 self.id += 1			
