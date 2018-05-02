@@ -5,7 +5,7 @@ import datetime
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from textblob import TextBlob
+from textblob.classifiers import NaiveBayesClassifier
 
 
 ### Michael O'Malley, Jacob Dumford, Gregory Nemecek
@@ -27,7 +27,7 @@ if __name__=="__main__":
 		print "Given team is invalid. Please choose Bulls, Rockets, or Heat."
 		sys.exit()
 	else:
-		data = pd.read_csv(str(sys.argv[1]) + '-data-clean.txt', sep='\t')
+		data = pd.read_csv('../' + str(sys.argv[1]) + '-data-clean.txt', sep='\t')
 
 	# Set times for the recorded games
 	if str(sys.argv[1]) == 'Heat':
@@ -36,6 +36,10 @@ if __name__=="__main__":
 		starttimes = ['2018-03-22 00:00:00','2018-03-24 00:00:00','2018-03-24 23:00:00','2018-03-28 00:00:00','2018-04-04 00:00:00','2018-04-08 00:00:00','2018-04-09 23:30:00','2018-04-12 00:00:00']
 	else:
 		starttimes = ['2018-03-21 02:30:00','2018-03-23 00:00:00','2018-03-25 00:00:00','2018-03-28 00:00:00','2018-04-04 00:00:00','2018-04-06 00:00:00','2018-04-08 00:30:00','2018-04-11 02:30:00','2018-04-12 02:30:00']
+
+	# Train sentiment model
+	with open('train-'+str(sys.argv[1])+'.csv', 'r') as fp:
+		cl=NaiveBayesClassifier(fp, format="csv")
 			
 	# Examine each game in the given teams data
 	for time in starttimes:
@@ -78,9 +82,13 @@ if __name__=="__main__":
 
 			# Add to sentiment
 			n+=1
-			line = row['text'].decode('utf-8')
-			testimonial=TextBlob(line)
-			sentiment+=testimonial.sentiment.polarity
+			newline=row['text'].decode('utf-8')
+			prob_dist=cl.prob_classify(newline)
+			line_sent = prob_dist.max()
+			if line_sent==' pos':
+				sentiment+=1
+			elif line_sent==' neg':
+				sentiment-=1
 
 			# If interval has been reach, start a new bin
 			if abs(time.minute - minutes) >= interval:
@@ -99,8 +107,8 @@ if __name__=="__main__":
 
 		# Format plot
 		plt.figure(figsize=(12,6))
-		plt.plot(times, tot_sentiment, color='r', label='Avg Sentiment')		
-		plt.title(str(sys.argv[1])+' Game: '+str(start_time)+'\nTextBlob: Avg Sentiment vs Time')
+		plt.plot(times, tot_sentiment, color='b', label='Avg Sentiment')
+		plt.title(str(sys.argv[1])+' Game: '+str(start_time)+'\nNaive Bayes: Avg Sentiment vs Time')
 		plt.xlabel('Time Interval')
 		plt.ylabel('Average Sentiment')
 		plt.xticks(times, labels, rotation='vertical')
@@ -109,5 +117,5 @@ if __name__=="__main__":
 		plt.tight_layout(w_pad=1.5, h_pad=1.5)
 
 		# Show plot
-		plt.savefig('./graphs/textblob-sentiment-vs-time/'+str(sys.argv[1])+' '+str(start_time)+'.png')
+		plt.savefig('./naivebayes-sentiment-vs-time/'+str(sys.argv[1])+' '+str(start_time)+'.png')
 

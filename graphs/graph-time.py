@@ -26,7 +26,7 @@ if __name__=="__main__":
 		print "Given team is invalid. Please choose Bulls, Rockets, or Heat."
 		sys.exit()
 	else:
-		data = pd.read_csv(str(sys.argv[1]) + '-data-clean.txt', sep='\t')
+		data = pd.read_csv('../' + str(sys.argv[1]) + '-data-clean.txt', sep='\t')
 
 	# Set times for the recorded games
 	if str(sys.argv[1]) == 'Heat':
@@ -106,7 +106,7 @@ if __name__=="__main__":
 		plt.tight_layout(w_pad=1.5, h_pad=1.5)
 
 		# Show plot
-		plt.savefig('./graphs/tweets-vs-time/'+str(sys.argv[1])+' '+str(start_time)+'.png')
+		plt.savefig('./tweets-vs-time/'+str(sys.argv[1])+' '+str(start_time)+'.png')
 
 
 
