@@ -47,16 +47,16 @@ if __name__=="__main__":
 		# Record start time and end time metrics
 		a = time.replace('-',' ').replace(':',' ').split()
 		a = [int(x) for x in a]
-		start_time = datetime.datetime(a[0],a[1],a[2],a[3],a[4],a[5])
-		if a[3] > 21:
-			end_time = datetime.datetime(a[0],a[1],a[2]+1,(a[3]-24)+2,a[4],a[5])
+		end_time = datetime.datetime(a[0],a[1],a[2],a[3],a[4],a[5])
+		if a[3] < 6:
+			start_time = datetime.datetime(a[0],a[1],a[2]-1,(a[3]-6)+24,a[4],a[5])
 		else:
-			end_time = datetime.datetime(a[0],a[1],a[2],a[3]+2,a[4],a[5])
+			start_time = datetime.datetime(a[0],a[1],a[2],a[3]-6,a[4],a[5])
 		
 		minutes = start_time.minute
 
 		# Initialize loop variables
-		interval = 2
+		interval = 5
 		times = []
 		labels = []
 		tot_time = 0
@@ -108,7 +108,7 @@ if __name__=="__main__":
 		# Format plot
 		plt.figure(figsize=(12,6))
 		plt.plot(times, tot_sentiment, color='b', label='Avg Sentiment')
-		plt.title(str(sys.argv[1])+' Game: '+str(start_time)+'\nNaive Bayes: Avg Sentiment vs Time')
+		plt.title(str(sys.argv[1])+' Before Game: '+str(start_time)+'\nNaive Bayes: Avg Sentiment vs Time')
 		plt.xlabel('Time Interval')
 		plt.ylabel('Average Sentiment')
 		plt.xticks(times, labels, rotation='vertical')
@@ -117,5 +117,5 @@ if __name__=="__main__":
 		plt.tight_layout(w_pad=1.5, h_pad=1.5)
 
 		# Show plot
-		plt.savefig('./naivebayes-sentiment-vs-time/'+str(sys.argv[1])+' '+str(start_time)+'.png')
+		plt.savefig('./naivebayes-before-game/'+str(sys.argv[1])+' '+str(start_time)+'.png')
 

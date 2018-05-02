@@ -108,7 +108,3 @@ if __name__=="__main__":
 		# Show plot
 		plt.savefig('./tweets-vs-time/'+str(sys.argv[1])+' '+str(start_time)+'.png')
 
-
-
-
-

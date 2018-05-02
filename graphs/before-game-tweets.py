@@ -5,13 +5,12 @@ import datetime
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from textblob.classifiers import NaiveBayesClassifier
 
 
 ### Michael O'Malley, Jacob Dumford, Gregory Nemecek
 ### Social Sensing and Cyber Physical Systems
 ### Semster Project
-### Graph Sentiment vs Time
+### Graph Tweets vs Time
 
 
 ### Main Execution ###
@@ -36,33 +35,29 @@ if __name__=="__main__":
 		starttimes = ['2018-03-22 00:00:00','2018-03-24 00:00:00','2018-03-24 23:00:00','2018-03-28 00:00:00','2018-04-04 00:00:00','2018-04-08 00:00:00','2018-04-09 23:30:00','2018-04-12 00:00:00']
 	else:
 		starttimes = ['2018-03-21 02:30:00','2018-03-23 00:00:00','2018-03-25 00:00:00','2018-03-28 00:00:00','2018-04-04 00:00:00','2018-04-06 00:00:00','2018-04-08 00:30:00','2018-04-11 02:30:00','2018-04-12 02:30:00']
-
-	# Train sentiment model
-	with open('../train-'+str(sys.argv[1])+'.csv', 'r') as fp:
-		cl=NaiveBayesClassifier(fp, format="csv")
 			
+
 	# Examine each game in the given teams data
 	for time in starttimes:
 
 		# Record start time and end time metrics
 		a = time.replace('-',' ').replace(':',' ').split()
 		a = [int(x) for x in a]
-		start_time = datetime.datetime(a[0],a[1],a[2],a[3],a[4],a[5])
-		if a[3] > 21:
-			end_time = datetime.datetime(a[0],a[1],a[2]+1,(a[3]-24)+2,a[4],a[5])
+		end_time = datetime.datetime(a[0],a[1],a[2],a[3],a[4],a[5])
+		if a[3] < 6:
+			start_time = datetime.datetime(a[0],a[1],a[2]-1,(a[3]-6)+24,a[4],a[5])
 		else:
-			end_time = datetime.datetime(a[0],a[1],a[2],a[3]+2,a[4],a[5])
+			start_time = datetime.datetime(a[0],a[1],a[2],a[3]-6,a[4],a[5])
 		
 		minutes = start_time.minute
 
 		# Initialize loop variables
-		interval = 2
+		interval = 5
 		times = []
 		labels = []
 		tot_time = 0
-		tot_sentiment = []
-		sentiment = 0
-		n = 0
+		tot_tweets = []
+		tweet_count = 0
 
 		# Loop through all the data
 		for index, row in data.iterrows():
@@ -80,15 +75,8 @@ if __name__=="__main__":
 			if end_time < time:
 				break
 
-			# Add to sentiment
-			n+=1
-			newline=row['text'].decode('utf-8')
-			prob_dist=cl.prob_classify(newline)
-			line_sent = prob_dist.max()
-			if line_sent==' pos':
-				sentiment+=1
-			elif line_sent==' neg':
-				sentiment-=1
+			# Add to tweet_count
+			tweet_count += 1
 
 			# If interval has been reach, start a new bin
 			if abs(time.minute - minutes) >= interval:
@@ -98,24 +86,25 @@ if __name__=="__main__":
 				tot_time += interval
 				labels.append(str(time.hour) + ':' + str(time.minute))
 				minutes = time.minute
+	
+				# Record Tweets variables
+				tot_tweets.append(tweet_count)		
+				tweet_count = 0
 
-				# Record sentiment variable
-				tot_sentiment.append(sentiment/float(n))
-				
 		# Drop used data
 		data = data.loc[index:]
 
 		# Format plot
 		plt.figure(figsize=(12,6))
-		plt.plot(times, tot_sentiment, color='b', label='Avg Sentiment')
-		plt.title(str(sys.argv[1])+' Game: '+str(start_time)+'\nNaive Bayes: Avg Sentiment vs Time')
+		plt.plot(times, tot_tweets, color='g')
+		plt.title(str(sys.argv[1])+' Before Game: '+str(start_time)+'\nTweets vs Time')
 		plt.xlabel('Time Interval')
-		plt.ylabel('Average Sentiment')
+		plt.ylabel('Number of Tweets')
 		plt.xticks(times, labels, rotation='vertical')
 		plt.grid(which='minor', alpha=0.2)
 		plt.grid(which='major', alpha=0.5)
 		plt.tight_layout(w_pad=1.5, h_pad=1.5)
 
 		# Show plot
-		plt.savefig('./naivebayes-sentiment-vs-time/'+str(sys.argv[1])+' '+str(start_time)+'.png')
+		plt.savefig('./tweets-before-game/'+str(sys.argv[1])+' '+str(start_time)+'.png')
 
