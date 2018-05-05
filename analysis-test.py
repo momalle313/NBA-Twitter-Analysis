@@ -44,7 +44,8 @@ if __name__ == "__main__":
 	pos=0
 	neg=0
 	for line in text:
-		testimonial=TextBlob(line)
+		newline=line.decode('utf-8')
+		testimonial=TextBlob(newline)
 		sentiment+=testimonial.sentiment.polarity
 		n+=1
 		if testimonial.sentiment.polarity!=0:
@@ -59,5 +60,5 @@ if __name__ == "__main__":
 	print "pos: ", pos
 	print "neg: ", neg
 	print "Average Sentiment: ", sentiment/n
-	print "Non-null Sentiment: ", sentiment/(pos+neg)
+	print "Non-null Sentiment: ", sentiment/(pos+neg) # average sentiment of tweets that aren't neutral
 

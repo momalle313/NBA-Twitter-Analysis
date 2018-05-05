@@ -35,24 +35,17 @@ if __name__ == "__main__":
 
 	print "Running..."
 
-	text=[]
+	text = []
 	# starttime='2018-03-21 12:00:00'
 	# endtime='2018-03-21 23:30:00'
 
-	# Heat_starttimes = []
-	# Bulls_starttimes = []
-	# Rockets_starttimes = []
-
+	# Game start times, which are when our model should stop usng tweets
 	Heat_endtimes = ['2018-03-21 23:30','2018-03-24 00:00','2018-04-03 23:30','2018-04-04 23:30','2018-04-09 23:30','2018-04-12 00:00']
 	Bulls_endtimes = ['2018-03-22 00:00','2018-03-24 00:00','2018-03-24 23:00','2018-03-28 00:00','2018-04-04 00:00','2018-04-08 00:00','2018-04-09 23:30','2018-04-12 00:00']
 	Rockets_endtimes = ['2018-03-21 02:30','2018-03-23 00:00','2018-03-25 00:00','2018-03-28 00:00','2018-04-04 00:00','2018-04-06 00:00','2018-04-08 00:30','2018-04-11 02:30','2018-04-12 02:30']
 
-	# Heat_extratimes = []
-	# Bulls_extratimes = []
-	# Rockets_extratimes = []
-	
 	# Set time range for the day to gather sentiment for
-	# Note: 4 hour time conversion from tweet time (UTC-4)
+	# Note: 4 hour time conversion from tweet time (UTC-4) to eastern time
 
 	if (sys.argv[1] == 'Heat'):
 		endtime = Heat_endtimes[int(sys.argv[2])]
@@ -72,40 +65,18 @@ if __name__ == "__main__":
 
 	sentiment=0.
 	n=0.
-	#sent_m=0.
-	#m=0.
 	pos=0.
 	neg=0.
 	with open('train-'+str(sys.argv[1])+'.csv', 'r') as fp:
 		cl=NaiveBayesClassifier(fp, format="csv")
 	for line in text:
 		newline=line.decode('utf-8')
-		#testimonial=TextBlob(newline)
-		#sentiment+=testimonial.sentiment.polarity
 		prob_dist=cl.prob_classify(newline)
-		#print prob_dist.prob("pos")
-		#print prob_dist.prob("neg")
-		#print prob_dist.prob("neu")
-		#print '"'+str(prob_dist.max())+'"'
-		#print "\n"
-		#line_sent = round(prob_dist.prob("pos"),2)
 		line_sent = prob_dist.max()
-		#sentiment += line_sent*2-1 # change scale from [0,1] to [-1,1]
 		n+=1
-		#if testimonial.sentiment.polarity!=0:
-		#if line_sent!=0.5:
-		#if line_sent!=' neu':
-			#sent_m+=testimonial.sentiment.polarity
-			#sent_m+=line_sent
-			#sent_m+=1
-			#m+=1
-		#if testimonial.sentiment.polarity>0:
-		#if line_sent>0.5:
 		if line_sent==' pos':
 			pos+=1
 			sentiment+=1
-		#elif testimonial.sentiment.polarity<0:
-		#elif line_sent<0.5:
 		elif line_sent==' neg':
 			neg+=1
 			sentiment-=1
@@ -114,5 +85,5 @@ if __name__ == "__main__":
 	print "pos: ", pos
 	print "neg: ", neg
 	print "Average Sentiment: ", sentiment/n
-	print "Non-null Sentiment: ", sentiment/(pos+neg)
+	print "Non-null Sentiment: ", sentiment/(pos+neg) # average sentiment of tweets that aren't neutral
 
