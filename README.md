@@ -1,7 +1,7 @@
 # NBA-Twitter-Analysis
 Social Sensing and Cyber Physical Systems Project
 
-The source code has four main functionalities:
+The source code has five main functionalities:
 1) To collect tweets, run the data scraper:
 "python scraper.py [team-name]"
 For example: "python scraper.py Bulls"
@@ -23,6 +23,11 @@ This will output to the command line the results of the sentiment analysis.
 4) To run the logistic regression and ROC curve:
 Use R or RStudio to run the code in the file R_Analysis.R
 It will use the data stored in Social_Sensing_NBA_Data.csv
+
+5) The graphs folder contains python scripts to generate several graphs of data over time:
+There are six scripts that can be run as "python [script-name] [team-name]", and the generated graphs are contained in the corresponding subdirectory.
+The graphs can show the number of tweets over time, average sentiment over time according to default TextBlob, and average sentiment over time according to our Naive Bayes Classifier.
+Additionally, the graphs can show data from either before the game or during the game.
 
 Team names include:
 Bulls
